@@ -57,4 +57,9 @@ public class UserService {
         param.setName(name);
         return userMapper.findOne(param);
     }
+
+    public boolean comparePassword(User user, User userInDataBase) {
+        return passwordToHash(user.getPassword())      // 将用户提交的密码转换为 hash
+                .equals(userInDataBase.getPassword()); // 数据库中的 password 已经是 hash，不用转换
+    }
 }
