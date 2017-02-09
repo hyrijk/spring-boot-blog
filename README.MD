@@ -3,3 +3,4 @@
 3. [实现用户注册接口](http://www.jianshu.com/p/07184349738a)
 4. [实现用户登录接口](http://www.jianshu.com/p/d99e4de60e5d)
 5. [配置 logback 和全局异常处理](http://www.jianshu.com/p/e0b6f29f9676)
+6. [使用 spring 拦截器和自定义注解进行登录拦截](http://www.jianshu.com/p/97362fdf039e)
