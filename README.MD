@@ -4,3 +4,4 @@
 4. [实现用户登录接口](http://www.jianshu.com/p/d99e4de60e5d)
 5. [配置 logback 和全局异常处理](http://www.jianshu.com/p/e0b6f29f9676)
 6. [使用 spring 拦截器和自定义注解进行登录拦截](http://www.jianshu.com/p/97362fdf039e)
+7. [通过自定义 @CurrentUser 获取当前登录用户](http://www.jianshu.com/p/01a6a61d9e02)
