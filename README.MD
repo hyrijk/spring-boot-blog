@@ -6,3 +6,4 @@
 6. [使用 spring 拦截器和自定义注解进行登录拦截](http://www.jianshu.com/p/97362fdf039e)
 7. [通过自定义 @CurrentUser 获取当前登录用户](http://www.jianshu.com/p/01a6a61d9e02)
 8. [实现文章添加和查询接口](http://www.jianshu.com/p/e54077b0bf37)
+9. [使用 fastjson 解析数据](http://www.jianshu.com/p/45682cd30ca2)
