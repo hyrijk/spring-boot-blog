@@ -21,7 +21,7 @@ public class UserApi {
     public Object add(@RequestBody User user) {
         if (userService.findByName(user.getName()) != null) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("message","用户名已被使用");
+            jsonObject.put("error","用户名已被使用");
             return jsonObject;
         }
         return userService.add(user);

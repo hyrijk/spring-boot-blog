@@ -35,7 +35,7 @@ public class PostApi {
         Post post = postService.findById(id);
         if (post == null) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("message", "文章不存在");
+            jsonObject.put("error", "文章不存在");
             return jsonObject;
         } else {
             return post;

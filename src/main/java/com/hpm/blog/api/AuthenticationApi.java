@@ -27,9 +27,9 @@ public class AuthenticationApi {
         User userInDataBase = userService.findByName(user.getName());
         JSONObject jsonObject = new JSONObject();
         if (userInDataBase == null) {
-            jsonObject.put("message", "用户不存在");
+            jsonObject.put("error", "用户不存在");
         } else if (!userService.comparePassword(user, userInDataBase)) {
-            jsonObject.put("message", "密码不正确");
+            jsonObject.put("error", "密码不正确");
         } else {
             String token = authenticationService.getToken(userInDataBase);
             jsonObject.put("token", token);

@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
             msg = "服务器出错";
         }
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("message", msg);
+        jsonObject.put("error", msg);
         return jsonObject;
     }
 }
