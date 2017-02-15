@@ -14,23 +14,48 @@
         INSERT INTO post (author_id, title, content) VALUES (#{authorId}, #{title}, #{content});
     </insert>
 
+    <update id="update">
+      UPDATE post
+         <set>
+             <if test="title!=null">
+                 title=#{title},
+             </if>
+             <if test="content!=null">
+                 content=#{content},
+             </if>
+         </set>
+      where post.id=#{id}
+    </update>
+
+    <delete id="delete">
+      DELETE FROM post WHERE post.id=#{id}
+    </delete>
+
     <select id="findOne" resultMap="PostResultMap">
-      SELECT
-	    post.id,
-        post.author_id ,
-        post.title ,
-        post.content ,
-        post.create_time ,
-        post.update_time,
-        <!-- 作者信息，password 不需要就不查了 -->
-        `user`.id as author__id,
-	    `user`.`name` as author__name
-      FROM post
-      LEFT JOIN `user` ON `user`.id=post.author_id
+      <include refid="select-post" />
       <where>
           <if test="id!=null">
              AND post.id=#{id}
           </if>
       </where>
     </select>
+
+    <select id="all" resultMap="PostResultMap">
+      <include refid="select-post" />
+    </select>
+
+    <sql id="select-post" >
+        SELECT
+            post.id,
+            post.author_id ,
+            post.title ,
+            post.content ,
+            post.create_time ,
+            post.update_time,
+            <!-- 作者信息，password 不需要就不查了 -->
+            `user`.id as author__id,
+            `user`.`name` as author__name
+        FROM post
+        LEFT JOIN `user` ON `user`.id=post.author_id
+    </sql>
 </mapper>
