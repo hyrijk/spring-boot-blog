@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring Boot blog demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="css/bulma.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/common.css">
+</head>
+<body>
+
+<!--页面整体结构-->
+<div id="app">
+    <x-header></x-header>
+    <main class="section main">
+        <!--<div :is="currentView"></div>-->
+        <router-view></router-view>
+    </main>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="content has-text-centered">
+            <p>前后端分离实践</p>
+            <p>Power by Spring Boot & Vue.js</p>
+            <p><a href="https://github.com/hyrijk/spring-boot-blog" target="_blank"><i class="fa fa-github"></i></a></p>
+        </div>
+    </div>
+</footer>
+
+<!--header template-->
+<script id="header" type="text/x-template">
+    <header>
+        <nav class="nav has-shadow">
+            <div class="nav-left">
+                <router-link class="nav-item" to="/">
+                    <h1 class="title is-4">spring blog</h1>
+                </router-link>
+            </div>
+            <div class="nav-center">
+                <router-link class="nav-item" to="/signup">
+                    <button class="button is-primary">注册</button>
+                </router-link>
+                <router-link class="nav-item" to="/login">
+                    <button class="button is-primary">登录</button>
+                </router-link>
+            </div>
+        </nav>
+    </header>
+</script>
+
+<!--posts list template-->
+<script id="posts" type="text/x-template">
+    <ul class="content posts">
+        <li v-for="post in posts" class="box">
+            <router-link :to="'/posts/' + post.id"><h1 class="">{{ post.title }}</h1></router-link>
+            <p><strong>{{ post.author.name}}</strong> •
+                <small>{{ post.createTime | longToDate }}</small>
+            </p>
+            <section> {{ post.content.substring(0, 200) }} ...</section>
+        </li>
+    </ul>
+</script>
+
+<!--posts list template-->
+<script id="post-detail" type="text/x-template">
+    <article class="content post">
+        <h1 class="has-text-centered">{{ post.title }}</h1>
+        <p class="has-text-right"><strong>{{ post.author.name }}</strong> •
+            <small>{{ post.createTime | longToDate }}</small>
+        </p>
+        <section v-html="compiledMarkdown"></section>
+    </article>
+</script>
+
+<!--login form template-->
+<script id="login-form" type="x-template">
+    <form @submit="handleSubmit">
+        <label class="label" for="name">用户名</label>
+        <p class="control">
+            <input v-model="name" class="input" type="text" id="name" placeholder="请输入用户名">
+        </p>
+        <label class="label" for="password">密码</label>
+        <p class="control">
+            <input v-model="password" class="input" type="password" id="password" placeholder="请输入密码">
+        </p>
+        <p class="control">
+            <input class="button is-primary is-12" type="submit" value="登录">
+        </p>
+    </form>
+</script>
+
+<!--signup form template-->
+<script id="signup-form" type="x-template">
+    <form @submit="handleSubmit">
+        <label class="label" for="name">用户名</label>
+        <p class="control">
+            <input v-model="name" class="input" type="text" id="name" placeholder="请输入用户名">
+        </p>
+        <label class="label" for="password">密码</label>
+        <p class="control">
+            <input v-model="password" class="input" type="password" id="password" placeholder="请输入密码">
+        </p>
+        <label class="label" for="password">确认密码</label>
+        <p class="control">
+            <input v-model="passwordAgain" class="input" type="password" id="password-again" placeholder="请再次输入密码">
+        </p>
+        <p class="control">
+            <input class="button is-primary is-12" type="submit" value="注册">
+        </p>
+    </form>
+</script>
+
+<script src="js/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="js/marked.min.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>
