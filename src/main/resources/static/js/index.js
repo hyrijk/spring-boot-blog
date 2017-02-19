@@ -1,6 +1,25 @@
+var bus = new Vue()
 
 var Header = {
     template: '#header',
+    data: function () {
+        return {
+            currentUser: JSON.parse(sessionStorage.getItem("currentUser"))
+        }
+    },
+    mounted: function () {
+        bus.$on("login", function () {
+            this.currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+        }.bind(this))
+    },
+    methods: {
+        logout: function () {
+            this.currentUser = null
+            sessionStorage.removeItem("token")
+            sessionStorage.removeItem("currentUser")
+            this.$router.push("/")
+        }
+    }
 }
 
 var PostList = {
@@ -37,7 +56,7 @@ var LoginForm = {
     methods: {
         handleSubmit: function (e) {
             e.preventDefault()
-            if (this.name ==='') {
+            if (this.name === '') {
                 alert("用户名不能为空")
                 return false
             }
@@ -45,7 +64,19 @@ var LoginForm = {
                 alert('密码不能为空')
                 return false
             }
-            console.log(this.name, this.password)
+            axios.post('/api/authentication', {
+                name: this.name,
+                password: this.password
+            }).then(function (res) {
+                if (res.data.error) {
+                    alert(res.data.error)
+                } else {
+                    sessionStorage.setItem("token", res.data.token)
+                    sessionStorage.setItem("currentUser", JSON.stringify(res.data.user));
+                    bus.$emit("login")
+                    this.$router.go(-1)
+                }
+            }.bind(this))
         }
     }
 }
@@ -62,7 +93,7 @@ var SignupForm = {
     methods: {
         handleSubmit: function (e) {
             e.preventDefault()
-            if (this.name ==='') {
+            if (this.name === '') {
                 alert("用户名不能为空")
                 return false
             }
@@ -92,7 +123,7 @@ marked.setOptions({
 });
 
 var PostDetail = {
-    template:  '#post-detail',
+    template: '#post-detail',
     data: function () {
         return {
             post: {
@@ -116,12 +147,56 @@ var PostDetail = {
     }
 }
 
+var NewPost = {
+    template: '#new-post',
+    data: function () {
+        return {
+            title: null,
+            content: null
+        }
+
+    },
+    beforeRouteEnter: function (to, from, next) {
+        if (sessionStorage.getItem("token") === null) {
+            next({path: 'login'})
+            alert("请先登录")
+        }
+        next()
+    },
+    methods: {
+        handleSubmit: function (e) {
+            if (this.title === null || this.title === "") {
+                alert("标题不能为空")
+                return false
+            }
+            if (this.content === null || this.content === "") {
+                alert("内容不能为空")
+                return false
+            }
+            axios.post('/api/post', {
+                    title: this.title,
+                    content: this.content,
+                }, {
+                    headers: {token: sessionStorage.getItem("token")}
+                }
+            ).then(function (res) {
+                if (res.data.error) {
+                    alert(res.data.error)
+                    return
+                }
+                this.$router.push("/posts/" + res.data.id)
+            }.bind(this))
+        }
+    }
+}
+
 var routes = [
-    { path: "/" , component: PostList} ,
-    { path: '/posts', component: PostList },
-    { path: '/login', component: LoginForm },
-    { path: '/signup', component: SignupForm },
-    { path: '/posts/:id', component: PostDetail },
+    {path: "/", component: PostList},
+    {path: '/posts', component: PostList},
+    {path: '/login', component: LoginForm},
+    {path: '/signup', component: SignupForm},
+    {path: '/posts/new', component: NewPost},
+    {path: '/posts/:id', component: PostDetail},
 ]
 
 var router = new VueRouter({

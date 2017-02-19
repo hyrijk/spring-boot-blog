@@ -39,13 +39,22 @@
                     <h1 class="title is-4">spring blog</h1>
                 </router-link>
             </div>
-            <div class="nav-center">
+            <div class="nav-center" v-if="currentUser === null">
                 <router-link class="nav-item" to="/signup">
                     <button class="button is-primary">注册</button>
                 </router-link>
                 <router-link class="nav-item" to="/login">
                     <button class="button is-primary">登录</button>
                 </router-link>
+            </div>
+            <div class="nav-center" v-else>
+                <span class="nav-item">{{ currentUser.name }}</span>
+                <router-link to="/posts/new" class="nav-item">
+                    <button class="button is-primary" >写文章</button>
+                </router-link>
+                <a class="nav-item">
+                    <button class="button is-primary" @click="logout">退出</button>
+                </a>
             </div>
         </nav>
     </header>
@@ -76,7 +85,7 @@
 </script>
 
 <!--login form template-->
-<script id="login-form" type="x-template">
+<script id="login-form" type="text/x-template">
     <form @submit="handleSubmit">
         <label class="label" for="name">用户名</label>
         <p class="control">
@@ -93,7 +102,7 @@
 </script>
 
 <!--signup form template-->
-<script id="signup-form" type="x-template">
+<script id="signup-form" type="text/x-template">
     <form @submit="handleSubmit">
         <label class="label" for="name">用户名</label>
         <p class="control">
@@ -113,6 +122,16 @@
     </form>
 </script>
 
+<!--new post template-->
+<script id="new-post" type="text/x-template">
+    <form @submit.prevent="handleSubmit">
+        <label for="title">标题</label>
+        <p class="control"><input type="text" v-model="title" id="title" class="input"></p>
+        <label for="content">内容</label>
+        <p class="control"><textarea id="content" v-model="content" class="textarea"></textarea></p>
+        <p class="control"><input type="submit" class="button is-primary" value="提交"></p>
+    </form>
+</script>
 <script src="js/vue.js"></script>
 <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
 <script src="js/axios.min.js"></script>
