@@ -26,7 +26,7 @@ var PostList = {
     template: '#posts',
     data: function () {
         return {
-            posts: {}
+            posts: []
         }
     },
     filters: {
@@ -37,7 +37,10 @@ var PostList = {
     },
     mounted: function () {
         axios.get("/api/post").then(function (res) {
-            this.posts = res.data
+            var posts = res.data
+            this.posts = posts.sort(function (a, b) {
+                return b.createTime - a.createTime
+            })
         }.bind(this))
     },
     methods: {
