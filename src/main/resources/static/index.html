@@ -15,6 +15,7 @@
 <div id="app">
     <x-header></x-header>
     <main class="section main">
+        <x-alert></x-alert>
         <router-view></router-view>
     </main>
 </div>
@@ -49,7 +50,7 @@
             <div class="nav-center" v-else>
                 <span class="nav-item">{{ currentUser.name }}</span>
                 <router-link to="/posts/new" class="nav-item">
-                    <button class="button is-primary" >写文章</button>
+                    <button class="button is-primary">写文章</button>
                 </router-link>
                 <a class="nav-item">
                     <button class="button is-primary" @click="logout">退出</button>
@@ -130,6 +131,16 @@
         <p class="control"><textarea id="content" v-model="content" class="textarea"></textarea></p>
         <p class="control"><input type="submit" class="button is-primary" value="提交"></p>
     </form>
+</script>
+
+<!-- alert template-->
+<script id="alert" type="text/x-template">
+    <transition name="fade">
+        <div class="notification" :class="classObject" v-show="visible">
+            <button class="delete" @click="reset"></button>
+            {{ message }}
+        </div>
+    </transition>
 </script>
 <script src="js/vue.js"></script>
 <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>

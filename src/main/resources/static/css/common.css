@@ -11,3 +11,10 @@
     margin: 0 auto;
     display: block;
 }
+
+.fade-enter-active, .fade-leave-active {
+    transition: all 1s
+}
+.fade-enter, .fade-leave-active {
+    opacity: 0
+}
