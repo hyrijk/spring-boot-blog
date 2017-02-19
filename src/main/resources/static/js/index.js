@@ -74,7 +74,7 @@ var LoginForm = {
                     sessionStorage.setItem("token", res.data.token)
                     sessionStorage.setItem("currentUser", JSON.stringify(res.data.user));
                     bus.$emit("login")
-                    this.$router.go(-1)
+                    this.$router.push('/')
                 }
             }.bind(this))
         }
@@ -105,7 +105,16 @@ var SignupForm = {
                 alert('两次输入的密码不一致')
                 return false
             }
-            console.log(this.name, this.password)
+            axios.post('/api/user', {
+                name: this.name,
+                password: this.password
+            }).then(function (res) {
+                if (res.data.error) {
+                    alert(res.data.error)
+                } else {
+                    this.$router.push('/login')
+                }
+            }.bind(this))
         }
     }
 }
