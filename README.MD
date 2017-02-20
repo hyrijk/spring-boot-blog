@@ -19,7 +19,7 @@ Spring Boot step by step
 
 1. [安装 docker](https://get.daocloud.io/#install-docker)
 2. [安装 docker-compose](https://get.daocloud.io/#install-compose)
-3. 修改 mysql 用户名和密码
+3. 修改 mysql 用户名和密码  
     ```
     $ cp application.yml.sample application.yml
     $ vi application.yml
@@ -29,19 +29,20 @@ Spring Boot step by step
     $ cp mysql.env mysql.env.local
     $ vi mysql.env.local
     ```
-4. package
+4. package  
     ```
     $ docker-compose up maven
     ```
-5. run
-    - 直接运行
+5. run  
+    - 直接运行  
         ```
         $ docker-compose up app
         ```
-    - 后台运行
+    - 后台运行  
         ```
         $ docker-compose start app
         ```
+
 ---
 
 ## 非docker
