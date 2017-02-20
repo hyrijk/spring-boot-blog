@@ -1,24 +1,15 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 log/
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
+# 根目录配置文件
+/application.yml
+
+### docker ###
+# mysql 最终配置文件
+mysql.env.local
+/maven
+/mysql
 
 ### IntelliJ IDEA ###
 .idea
-*.iws
 *.iml
-*.ipr
-
-### NetBeans ###
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
