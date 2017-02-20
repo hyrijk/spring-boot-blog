@@ -1,5 +1,33 @@
 var bus = new Vue()
 
+function emitError(message) {
+    bus.$emit('error', message)
+}
+
+function onError(fn) {
+    bus.$on('error', fn)
+}
+
+function emitInfo(message) {
+    bus.$emit('info', message)
+}
+
+function onInfo(fn) {
+    bus.$on('info', fn)
+}
+
+function emitLogin() {
+    bus.$emit('login')
+}
+
+function onLogin(fn) {
+    bus.$on('login', fn)
+}
+
+function handleError(errorMessage) {
+    emitError(errorMessage)
+}
+
 var Alert = {
     template: '#alert',
     data: function () {
@@ -13,14 +41,14 @@ var Alert = {
         }
     },
     mounted: function () {
-        bus.$on('error', function (errorMessage) {
+        onError(function (errorMessage) {
             this.classObject['is-danger'] = true;
             this.message = errorMessage
             this.visible = true
             setTimeout(this.reset.bind(this), 2000)
         }.bind(this))
 
-        bus.$on('info', function (message) {
+        onInfo(function (message) {
             this.classObject['is-info'] = true;
             this.message = message
             this.visible = true
@@ -43,7 +71,7 @@ var Header = {
         }
     },
     mounted: function () {
-        bus.$on('login', function () {
+        onLogin(function () {
             this.currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
         }.bind(this))
     },
@@ -72,10 +100,14 @@ var PostList = {
     },
     mounted: function () {
         axios.get('/api/post').then(function (res) {
-            var posts = res.data
-            this.posts = posts.sort(function (a, b) {
-                return b.createTime - a.createTime
-            })
+            if (res.data.error) {
+                handleError(res.data.error)
+            } else {
+                var posts = res.data
+                this.posts = posts.sort(function (a, b) {
+                    return b.createTime - a.createTime
+                })
+            }
         }.bind(this))
     },
     methods: {
@@ -95,11 +127,11 @@ var LoginForm = {
         handleSubmit: function (e) {
             e.preventDefault()
             if (this.name === '') {
-                bus.$emit('error', '用户名不能为空')
+                handleError('用户名不能为空')
                 return false
             }
             if (this.password === '') {
-                bus.$emit('error', '密码不能为空')
+                handleError('密码不能为空')
                 return false
             }
             axios.post('/api/authentication', {
@@ -107,11 +139,11 @@ var LoginForm = {
                 password: this.password
             }).then(function (res) {
                 if (res.data.error) {
-                    bus.$emit('error', res.data.error)
+                    handleError(res.data.error)
                 } else {
                     sessionStorage.setItem('token', res.data.token)
                     sessionStorage.setItem('currentUser', JSON.stringify(res.data.user));
-                    bus.$emit('login')
+                    emitLogin()
                     this.$router.push('/')
                 }
             }.bind(this))
@@ -132,15 +164,15 @@ var SignupForm = {
         handleSubmit: function (e) {
             e.preventDefault()
             if (this.name === '') {
-                bus.$emit('error', '用户名不能为空')
+                handleError('用户名不能为空')
                 return false
             }
             if (this.password === '') {
-               bus.$emit('error', '密码不能为空')
+               handleError('密码不能为空')
                 return false
             }
             if (this.password !== this.passwordAgain) {
-                bus.$emit('error', '两次输入的密码不一致')
+                handleError('两次输入的密码不一致')
                 return false
             }
             axios.post('/api/user', {
@@ -148,9 +180,9 @@ var SignupForm = {
                 password: this.password
             }).then(function (res) {
                 if (res.data.error) {
-                    bus.$emit('error', res.data.error)
+                    handleError(res.data.error)
                 } else {
-                    bus.$emit('info', '注册成功，请登录')
+                    emitInfo('注册成功，请登录')
                     this.$router.push('/login')
                 }
             }.bind(this))
@@ -182,7 +214,12 @@ var PostDetail = {
     },
     mounted: function () {
         axios.get('/api/post/' + this.$route.params.id).then(function (res) {
-            this.post = res.data
+            if (res.data.error) {
+                handleError(res.data.error)
+                return
+            } else {
+                this.post = res.data
+            }
         }.bind(this))
     },
     filters: {
@@ -206,21 +243,20 @@ var NewPost = {
     },
     beforeRouteEnter: function (to, from, next) {
         if (sessionStorage.getItem('token') === null) {
-            bus.$emit('info', '请先登录')
-            Vue.nextTick(function () {
-                next({path: '/login'})
-            })
+            next({path: 'login'})
+            emitInfo('请先登录')
+        } else {
+            next()
         }
-        next()
     },
     methods: {
         handleSubmit: function (e) {
             if (this.title === null || this.title === '') {
-                bus.$emit('error', '标题不能为空')
+                handleError('标题不能为空')
                 return false
             }
             if (this.content === null || this.content === '') {
-                bus.$emit('error', '内容不能为空')
+                handleError('内容不能为空')
                 return false
             }
             axios.post('/api/post', {
@@ -231,7 +267,7 @@ var NewPost = {
                 }
             ).then(function (res) {
                 if (res.data.error) {
-                    bus.$emit('error', res.data.error)
+                    handleError(res.data.error)
                     return
                 }
                 this.$router.push('/posts/' + res.data.id)
