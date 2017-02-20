@@ -1,0 +1,29 @@
+maven:
+  image: maven:3.3-jdk-8
+  command: mvn clean package -Dmaven.test.skip=true
+  volumes:
+  - .:/code
+  - ./maven:/root/.m2
+  working_dir: /code
+
+mysql:
+  build: ./dockerFiles/mysql
+  volumes:
+  - ./mysql:/var/lib/mysql
+  working_dir: /var/lib/mysql
+  ports:
+  - "13306:3306"
+  env_file:
+  - ./mysql.env
+  - ./mysql.env.local
+
+app:
+  build: ./dockerFiles/java
+  command: java -jar target/spring-boot-blog-0.0.1-SNAPSHOT.jar
+  volumes:
+  - .:/code
+  working_dir: /code
+  ports:
+  - "18080:8080"
+  links:
+  - mysql:mysql
