@@ -1,4 +1,5 @@
 Spring Boot step by step
+
 1. [使用 idea 新建 Spring Boot 项目](http://www.jianshu.com/p/45ba074dbc81)
 2. [使用 Spring Maven 仓库加速 Maven jar 包下载](http://www.jianshu.com/p/87100dd1ec52)
 3. [实现用户注册接口](http://www.jianshu.com/p/07184349738a)
@@ -10,8 +11,12 @@ Spring Boot step by step
 9. [使用 fastjson 解析数据](http://www.jianshu.com/p/45682cd30ca2)
 
 # 部署说明
+
+---
+
 ## docker 
 默认 18080 端口
+
 1. [安装 docker](https://get.daocloud.io/#install-docker)
 2. [安装 docker-compose](https://get.daocloud.io/#install-compose)
 3. 修改 mysql 用户名和密码
@@ -37,13 +42,16 @@ Spring Boot step by step
         ```
         $ docker-compose start app
         ```
+---
+
 ## 非docker
 默认 8080 端口
-1. package
-```
-$ mvn clean package 
-```
-2. run
-```
-$ nohub java -jar target/spring-boot-blog-0.0.1-SNAPSHOT.jar &
-```
+
+1. package  
+    ```
+    $ mvn clean package 
+    ```
+2. run  
+    ```
+    $ nohub java -jar target/spring-boot-blog-0.0.1-SNAPSHOT.jar &
+    ```
